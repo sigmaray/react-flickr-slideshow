@@ -1,18 +1,80 @@
+import * as $ from 'jquery';
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
+import VCenter from './partials/VCenter';
+import downloadPics from './flickr';
+import generateNoty from './generateNoty';
 
 class App extends Component {
+  constructor() {
+    super();
+
+    this.state = {
+      page: 0,
+      query: 'romania',
+      data: [],
+      dataPicNum: 0
+    };
+
+    this.getData();
+  }
+  getData() {
+    downloadPics(
+      this.afterDownload,
+      function(message) { generateNoty(message); },
+      this.state.query,
+      this.state.page
+    )
+  }
+  afterDownload = (data) => {
+    this.setState({page: this.state.page + 1, data: data});
+    this.slideshowTimeout();
+  }
+  slideshowTimeout = () => {
+    if (this.state.dataPicNum + 1 < this.state.data.length) {
+      this.setState({dataPicNum: this.state.dataPicNum + 1});
+      setTimeout(this.slideshowTimeout, 3000);
+    } else {
+      this.setState({dataPicNum: 0});
+      this.getData();
+    }
+  }
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+      <div>
+        <VCenter>
+          <center>
+            {
+              this.state.data.length > 0
+              ?
+              <table width='100%'>
+                <tr>
+                  <td width='50%'>
+                    <a href={this.state.data[this.state.dataPicNum].flickrUrl}>
+                      <img src={this.state.data[this.state.dataPicNum].src} />
+                    </a>
+                  </td>
+                  <td width='50%' style={{'padding-left': '20px'}}>
+                    <p>{`page: ${JSON.stringify(this.state.page)}`}</p>
+                    <p>{`dataPicNum: ${JSON.stringify(this.state.dataPicNum)}`}</p>
+                  </td>
+                </tr>
+              </table>
+              /*this.state.data.map((item) =>
+                <p>
+                  {JSON.stringify(item)}
+                  <div>
+                    <a href={item.flickrUrl}>
+                      <img src={item.src} width='20' />
+                    </a>
+                  </div>
+                </p>
+              )*/
+              :
+              <p>...loading data...</p>
+            }
+          </center>
+        </VCenter>
       </div>
     );
   }
