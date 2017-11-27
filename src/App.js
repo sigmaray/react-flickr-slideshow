@@ -20,15 +20,17 @@ class App extends Component {
   }
   getData() {
     downloadPics(
-      this.afterDownload,
-      function(message) { generateNoty(message); },
+      (data) => {
+        this.setState({page: this.state.page + 1, data: data});
+        this.slideshowTimeout();
+      },
+      (message) => {
+        generateNoty(message);
+        setTimeout(this.getData.bind(this), 3000);
+      },
       this.state.query,
       this.state.page
     )
-  }
-  afterDownload = (data) => {
-    this.setState({page: this.state.page + 1, data: data});
-    this.slideshowTimeout();
   }
   slideshowTimeout = () => {
     if (this.state.dataPicNum + 1 < this.state.data.length) {
