@@ -16,8 +16,8 @@ class App extends Component {
     this.state = {
       limit: 10,
       page: 0,
-      query: 'romania',
-      inputQuery: 'romania',
+      query: 'Romania',
+      inputQuery: 'Romania',
       data: [],
       dataPicNum: 0,
       resetToNewQuery: false,
@@ -113,6 +113,9 @@ class App extends Component {
       this.setState({query: val, resetToNewQuery: true});
     }
   }
+  handleExampmeButtonClick = (val) => {
+    this.setState({inputQuery: val, query: val, resetToNewQuery: true});
+  }
   render() {
     return (
       <div>
@@ -140,7 +143,17 @@ class App extends Component {
                     <input type='button' value='Go!' onClick={this.handleGoButtonClick} ref='goButton' />
                   </p>
                   <p>
+                    <input type='button' value='Exampe: Paris' onClick={() => { this.handleExampmeButtonClick('Paris') }} />
+                  </p>
+                  <p>
+                    <input type='button' value='Exampe: Chicago' onClick={() => { this.handleExampmeButtonClick('Chicago') }} />
+                  </p>
+                  <p>
+                    <input type='button' value='Example: Berlin' onClick={() => { this.handleExampmeButtonClick('Berlin') }} />
+                  </p>
+                  <p>
                     <select ref='timeSelect' onChange={this.handleSelectChange}>
+                      <option value='1' selected={this.state.counter == 1}>1 sec</option>
                       <option value='3' selected={this.state.counter == 3}>3 sec</option>
                       <option value='5' selected={this.state.counter == 5}>5 sec</option>
                       <option value='10' selected={this.state.counter == 10}>10 sec</option>
