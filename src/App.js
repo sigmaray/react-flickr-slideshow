@@ -10,6 +10,9 @@ class App extends Component {
   constructor() {
     super();
 
+    this.counter = 10;
+    this.timer = null;
+
     this.state = {
       limit: 10,
       page: 0,
@@ -19,10 +22,43 @@ class App extends Component {
       dataPicNum: 0,
       resetToNewQuery: false,
       currentImage: null,
-      timeOut: 5000
+      timeOut: 5000,
+      counter: 10,
+      status: 0,
+      resetCounter: false
     };
 
     this.getData();
+
+    // this.startCountDown(() => {
+    //   // alert('finished');
+    // });
+  }
+  startCountDown = (finishCallback, ms) => {
+    // alert(this.state.counter);
+    this.setState({status: ms});
+    setTimeout(() => { 
+      this.setState({status: this.state.counter});
+      // alert(this.state.status);
+      this.timer = setTimeout(() => { this.countDown(finishCallback); }, 1000);
+    }, 1000)
+  }
+  countDown = (finishCallback) => {
+    // alert('L34');
+    // this.counter = this.counter - 1;
+    // alert(JSON.stringify(this.state));
+    var newC = this.state.status - 1;
+    this.setState({status: newC});
+    if (this.state.status == 0 || this.state.resetToNewQuery) {
+       // if (this.state.resetToNewQuery) { this.setState({resetToNewQuery: false}) };
+
+       clearTimeout(this.timer);
+       this.timer = null;
+       finishCallback();
+    }
+    else {
+      this.timer = setTimeout(() => { this.countDown(finishCallback); }, 1000);
+    }
   }
   getData() {
     downloadPics(
@@ -32,7 +68,7 @@ class App extends Component {
       },
       (message) => {
         generateNoty(message);
-        setTimeout(this.getData.bind(this), 3000);
+        this.startCountDown(this.getData.bind(this), this.state.counter);
       },
       this.state.query,
       this.state.page,
@@ -41,7 +77,7 @@ class App extends Component {
   }
   slideshowTimeout = () => {
     this.setState({currentImage: this.state.data[this.state.dataPicNum]});
-    setTimeout(
+    this.startCountDown(
       () => {
         if (!this.state.resetToNewQuery) {
           if (this.state.dataPicNum + 1 < this.state.data.length) {            
@@ -58,11 +94,15 @@ class App extends Component {
         }
       }
       ,
-      this.state.timeOut
+      this.state.counter
     );
   }
   handleInputChange = (event) => {
     this.setState({inputQuery: event.target.value});
+  }
+  handleSelectChange = (event) => {
+    var v = parseInt(event.target.value);
+    this.setState({counter: v, status: v, resetCounter: true});
   }
   handleGoButtonClick = () => {
     // var val = ReactDOM.findDOMNode(this.refs.goButton).value;
@@ -99,21 +139,29 @@ class App extends Component {
                   <p>
                     <input type='button' value='Go!' onClick={this.handleGoButtonClick} ref='goButton' />
                   </p>
+                  <p>
+                    <select ref='timeSelect' onChange={this.handleSelectChange}>
+                      <option value='3' selected={this.state.counter == 3}>3 sec</option>
+                      <option value='5' selected={this.state.counter == 5}>5 sec</option>
+                      <option value='10' selected={this.state.counter == 10}>10 sec</option>
+                      <option value='30' selected={this.state.counter == 30}>30 sec</option>
+                      <option value='60' selected={this.state.counter == 60}>60 sec</option>
+                    </select>
+                  </p>
                 </td>
                 <td width='33%' style={{'padding-left': '20px'}}>
-                  {
-                    this.state.resetToNewQuery
-                    ?
-                    <div>..resetting to new query..</div>
-                    :
+                    {this.state.resetToNewQuery &&
+                      <div>..resetting to new query..</div>
+                    }
                     <div>
                       <p>{`query: ${JSON.stringify(this.state.query)}`}</p>
                       <p>{`[${JSON.stringify(this.state.dataPicNum + 1)}/${this.state.limit}] of page ${this.state.page + 1}`} </p>
                       <p>{`page: ${JSON.stringify(this.state.page)}`}</p>
                       <p>{`dataPicNum: ${JSON.stringify(this.state.dataPicNum)}`}</p>
                       <p>{`timeOut: ${JSON.stringify(this.state.timeOut)} ms`}</p>
+                      <p>{`status: ${JSON.stringify(this.state.status)}`}</p>
+                      <p>{`counter: ${JSON.stringify(this.state.counter)}`}</p>
                     </div>
-                  }
                 </td>
               </tr>
             </table>
