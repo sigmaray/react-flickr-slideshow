@@ -15,7 +15,7 @@ class App extends Component {
 
     this.state = {
       limit: 10,
-      page: 0,
+      page: 1,
       query: 'Romania',
       inputQuery: 'Romania',
       data: [],
@@ -26,6 +26,7 @@ class App extends Component {
       counter: 10,
       status: 0,
       resetCounter: false,
+      resetToBack: false,
       resetToNext: false,
       paused: false
     };
@@ -53,7 +54,7 @@ class App extends Component {
       var newC = this.state.status - 1;
       this.setState({status: newC});
     }
-    if ((!this.state.paused) && (this.state.status == 0 || this.state.resetToNewQuery || this.state.resetToNext)) {
+    if ((!this.state.paused) && (this.state.status == 0 || this.state.resetToNewQuery || this.state.resetToNext || this.state.resetToBack)) {
        // if (this.state.resetToNewQuery) { this.setState({resetToNewQuery: false}) };
 
        clearTimeout(this.timer);
@@ -88,16 +89,34 @@ class App extends Component {
             this.setState({resetToNext: false});
           }
 
-          if (this.state.dataPicNum + 1 < this.state.data.length) {            
-            this.setState({dataPicNum: this.state.dataPicNum + 1});
-            this.slideshowTimeout();
+          if (!this.state.resetToBack) {
+            if (this.state.dataPicNum + 1 < this.state.data.length) {            
+              this.setState({dataPicNum: this.state.dataPicNum + 1});
+              this.slideshowTimeout();
+            } else {
+              this.setState({page: this.state.page + 1, dataPicNum: 0});
+              this.getData();
+            }
           } else {
-            this.setState({page: this.state.page + 1, dataPicNum: 0});
-            this.getData();
+            // alert('L101');
+            this.setState({resetToBack: false});
+
+            if (this.state.dataPicNum - 1 >= 0 ) {
+              // alert('L105');
+              this.setState({dataPicNum: this.state.dataPicNum - 1});
+              this.slideshowTimeout();
+            } else {
+              // alert('L108');
+              if (this.state.page - 1 >= 1 ) {
+                // alert('L110');
+                this.setState({page: this.state.page - 1, dataPicNum: 9});
+                this.getData();
+              }
+            }
           }
         } else {
           // User inputted new search query and clicked on button
-          this.setState({data: [], page: 0, dataPicNum: 0, resetToNewQuery: false});
+          this.setState({data: [], page: 1, dataPicNum: 0, resetToNewQuery: false});
           this.getData();
         }
       }
@@ -124,9 +143,11 @@ class App extends Component {
   handleExampmeButtonClick = (val) => {
     this.setState({inputQuery: val, query: val, resetToNewQuery: true, paused: false});
   }
-  /*handleBackButtonClick() {
-    alert('Back')
-  }*/
+  handleBackButtonClick = () => {
+    if (!(this.state.page == 1 && this.state.dataPicNum == 0)) {
+      this.setState({resetToBack: true, paused: false});
+    }
+  }
   handlePauseButtonClick = () => {
     this.setState({paused: true});
   }
@@ -181,9 +202,9 @@ class App extends Component {
                       <option value='60' selected={this.state.counter == 60}>60 sec</option>
                     </select>
                   </p>
-                  {/*<p>
+                  <p>
                     <input type='button' value='< Back' onClick={this.handleBackButtonClick} />
-                  </p>*/}
+                  </p>
                   <p>
                     <input type='button' value='Next >' onClick={this.handleNextButtonClick} />
                   </p>
@@ -200,13 +221,16 @@ class App extends Component {
                     }
                     <div>
                       <p>{`query: ${JSON.stringify(this.state.query)}`}</p>
-                      <p>{`[${JSON.stringify(this.state.dataPicNum + 1)}/${this.state.limit}] of page ${this.state.page + 1}`} </p>
+                      <p>{`[${JSON.stringify(this.state.dataPicNum + 1)}/${this.state.limit}] of page ${this.state.page}`} </p>
                       <p>{`page: ${JSON.stringify(this.state.page)}`}</p>
                       <p>{`dataPicNum: ${JSON.stringify(this.state.dataPicNum)}`}</p>
                       <p>{`timeOut: ${JSON.stringify(this.state.timeOut)} ms`}</p>
                       <p>{`status: ${JSON.stringify(this.state.status)}`}</p>
                       <p>{`counter: ${JSON.stringify(this.state.counter)}`}</p>
                       <p>{`paused: ${JSON.stringify(this.state.paused)}`}</p>
+                      <p>{`resetToBack: ${JSON.stringify(this.state.resetToBack)}`}</p>
+                      <p>{`resetToNext: ${JSON.stringify(this.state.resetToNext)}`}</p>
+                      
                     </div>
                 </td>
               </tr>
