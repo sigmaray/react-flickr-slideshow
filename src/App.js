@@ -25,7 +25,9 @@ class App extends Component {
       timeOut: 5000,
       counter: 10,
       status: 0,
-      resetCounter: false
+      resetCounter: false,
+      resetToNext: false,
+      paused: false
     };
 
     this.getData();
@@ -37,19 +39,21 @@ class App extends Component {
   startCountDown = (finishCallback, ms) => {
     // alert(this.state.counter);
     this.setState({status: ms});
-    setTimeout(() => { 
+    // setTimeout(() => { 
       this.setState({status: this.state.counter});
       // alert(this.state.status);
       this.timer = setTimeout(() => { this.countDown(finishCallback); }, 1000);
-    }, 1000)
+    // }, 1000)
   }
   countDown = (finishCallback) => {
     // alert('L34');
     // this.counter = this.counter - 1;
     // alert(JSON.stringify(this.state));
-    var newC = this.state.status - 1;
-    this.setState({status: newC});
-    if (this.state.status == 0 || this.state.resetToNewQuery) {
+    if (!this.state.paused) {
+      var newC = this.state.status - 1;
+      this.setState({status: newC});
+    }
+    if ((!this.state.paused) && (this.state.status == 0 || this.state.resetToNewQuery || this.state.resetToNext)) {
        // if (this.state.resetToNewQuery) { this.setState({resetToNewQuery: false}) };
 
        clearTimeout(this.timer);
@@ -80,6 +84,10 @@ class App extends Component {
     this.startCountDown(
       () => {
         if (!this.state.resetToNewQuery) {
+          if (this.state.resetToNext) {
+            this.setState({resetToNext: false});
+          }
+
           if (this.state.dataPicNum + 1 < this.state.data.length) {            
             this.setState({dataPicNum: this.state.dataPicNum + 1});
             this.slideshowTimeout();
@@ -102,7 +110,7 @@ class App extends Component {
   }
   handleSelectChange = (event) => {
     var v = parseInt(event.target.value);
-    this.setState({counter: v, status: v, resetCounter: true});
+    this.setState({counter: v, status: v, resetCounter: true, paused: false});
   }
   handleGoButtonClick = () => {
     // var val = ReactDOM.findDOMNode(this.refs.goButton).value;
@@ -110,11 +118,23 @@ class App extends Component {
     if (!val) {
       generateNoty('Please input non empty string.');
     } else {
-      this.setState({query: val, resetToNewQuery: true});
+      this.setState({query: val, resetToNewQuery: true, paused: false});
     }
   }
   handleExampmeButtonClick = (val) => {
-    this.setState({inputQuery: val, query: val, resetToNewQuery: true});
+    this.setState({inputQuery: val, query: val, resetToNewQuery: true, paused: false});
+  }
+  /*handleBackButtonClick() {
+    alert('Back')
+  }*/
+  handlePauseButtonClick = () => {
+    this.setState({paused: true});
+  }
+  handleUnpauseButtonClick = () => {
+    this.setState({paused: false});
+  }
+  handleNextButtonClick = () => {
+    this.setState({resetToNext: true, paused: false});
   }
   render() {
     return (
@@ -128,7 +148,7 @@ class App extends Component {
                 {
                   this.state.currentImage != null
                   ?
-                  <a href={this.state.currentImage.flickrUrl}>
+                  <a href={this.state.currentImage.flickrUrl} target='_blank'>
                     <img src={this.state.currentImage.src} style={{'max-width': `${window.document.body.clientWidth * 0.6}px`}} />
                   </a>
                   :
@@ -161,6 +181,18 @@ class App extends Component {
                       <option value='60' selected={this.state.counter == 60}>60 sec</option>
                     </select>
                   </p>
+                  {/*<p>
+                    <input type='button' value='< Back' onClick={this.handleBackButtonClick} />
+                  </p>*/}
+                  <p>
+                    <input type='button' value='Next >' onClick={this.handleNextButtonClick} />
+                  </p>
+                  <p>
+                    <input type='button' value='Pause' onClick={this.handlePauseButtonClick} />
+                  </p>
+                  <p>
+                    <input type='button' value='Unpause' onClick={this.handleUnpauseButtonClick} />
+                  </p>
                 </td>
                 <td width='33%' style={{'padding-left': '20px'}}>
                     {this.state.resetToNewQuery &&
@@ -174,6 +206,7 @@ class App extends Component {
                       <p>{`timeOut: ${JSON.stringify(this.state.timeOut)} ms`}</p>
                       <p>{`status: ${JSON.stringify(this.state.status)}`}</p>
                       <p>{`counter: ${JSON.stringify(this.state.counter)}`}</p>
+                      <p>{`paused: ${JSON.stringify(this.state.paused)}`}</p>
                     </div>
                 </td>
               </tr>
