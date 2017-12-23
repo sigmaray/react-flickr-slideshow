@@ -24,7 +24,7 @@ class App extends Component {
       currentImage: null,
       timeOut: 5000,
       counter: 10,
-      status: 0,
+      countdownS: 0,
       resetCounter: false,
       resetToBack: false,
       resetToNext: false,
@@ -39,10 +39,10 @@ class App extends Component {
   }
   startCountDown = (finishCallback, ms) => {
     // alert(this.state.counter);
-    this.setState({status: ms});
+    this.setState({countdownS: ms});
     // setTimeout(() => { 
-      this.setState({status: this.state.counter});
-      // alert(this.state.status);
+      this.setState({countdownS: this.state.counter});
+      // alert(this.state.countdownS);
       this.timer = setTimeout(() => { this.countDown(finishCallback); }, 1000);
     // }, 1000)
   }
@@ -51,10 +51,10 @@ class App extends Component {
     // this.counter = this.counter - 1;
     // alert(JSON.stringify(this.state));
     if (!this.state.paused) {
-      var newC = this.state.status - 1;
-      this.setState({status: newC});
+      var newC = this.state.countdownS - 1;
+      this.setState({countdownS: newC});
     }
-    if ((!this.state.paused) && (this.state.status == 0 || this.state.resetToNewQuery || this.state.resetToNext || this.state.resetToBack)) {
+    if ((!this.state.paused) && (this.state.countdownS == 0 || this.state.resetToNewQuery || this.state.resetToNext || this.state.resetToBack)) {
        // if (this.state.resetToNewQuery) { this.setState({resetToNewQuery: false}) };
 
        clearTimeout(this.timer);
@@ -129,7 +129,7 @@ class App extends Component {
   }
   handleSelectChange = (event) => {
     var v = parseInt(event.target.value);
-    this.setState({counter: v, status: v, resetCounter: true, paused: false});
+    this.setState({counter: v, countdownS: v, resetCounter: true, paused: false});
   }
   handleGoButtonClick = () => {
     // var val = ReactDOM.findDOMNode(this.refs.goButton).value;
@@ -226,7 +226,7 @@ class App extends Component {
                       <p>{`page: ${JSON.stringify(this.state.page)}`}</p>
                       <p>{`dataPicNum: ${JSON.stringify(this.state.dataPicNum)}`}</p>
                       <p>{`timeOut: ${JSON.stringify(this.state.timeOut)} ms`}</p>
-                      <p>{`status: ${JSON.stringify(this.state.status)}`}</p>
+                      <p>{`countdownS: ${JSON.stringify(this.state.countdownS)}`}</p>
                       <p>{`counter: ${JSON.stringify(this.state.counter)}`}</p>
                       <p>{`paused: ${JSON.stringify(this.state.paused)}`}</p>
                       <p>{`resetToBack: ${JSON.stringify(this.state.resetToBack)}`}</p>
