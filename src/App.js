@@ -171,7 +171,7 @@ class App extends Component {
                   ?
                   <a href={this.state.currentImage.flickrUrl} target='_blank'>
                     {/*<img src={this.state.currentImage.src} style={{'max-width': `${window.document.body.clientWidth * 0.6}px`}} />*/}
-                    <img src={this.state.currentImage.src} style={{'max-width': `100%`}} />                    
+                    <img src={this.state.currentImage.src} style={{'max-width': `100%`, 'max-height': `${window.innerHeight - 10}px`}} />
                   </a>
                   :
                   <p>...loading data...</p>
