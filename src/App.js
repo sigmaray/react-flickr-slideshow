@@ -165,18 +165,19 @@ class App extends Component {
             
             <table width='100%'>
               <tr>
-                <td width='33%'>
+                <td width='100%' ref='td1'>
                 {
                   this.state.currentImage != null
                   ?
                   <a href={this.state.currentImage.flickrUrl} target='_blank'>
-                    <img src={this.state.currentImage.src} style={{'max-width': `${window.document.body.clientWidth * 0.6}px`}} />
+                    {/*<img src={this.state.currentImage.src} style={{'max-width': `${window.document.body.clientWidth * 0.6}px`}} />*/}
+                    <img src={this.state.currentImage.src} style={{'max-width': `100%`}} />                    
                   </a>
                   :
                   <p>...loading data...</p>
                 }
                 </td>
-                <td width='33%' style={{'padding-left': '20px'}}>
+                <td width='1' style={{'padding-left': '20px'}}>
                   <p>
                     <input type='text' placeholder='searchQuery' value={this.state.inputQuery} onChange={this.handleInputChange} />
                   </p>
@@ -215,7 +216,7 @@ class App extends Component {
                     <input type='button' value='Unpause' onClick={this.handleUnpauseButtonClick} />
                   </p>
                 </td>
-                <td width='33%' style={{'padding-left': '20px'}}>
+                <td width='1' style={{'padding-left': '20px'}}>
                     {this.state.resetToNewQuery &&
                       <div>..resetting to new query..</div>
                     }
@@ -229,8 +230,7 @@ class App extends Component {
                       <p>{`counter: ${JSON.stringify(this.state.counter)}`}</p>
                       <p>{`paused: ${JSON.stringify(this.state.paused)}`}</p>
                       <p>{`resetToBack: ${JSON.stringify(this.state.resetToBack)}`}</p>
-                      <p>{`resetToNext: ${JSON.stringify(this.state.resetToNext)}`}</p>
-                      
+                      <p>{`resetToNext: ${JSON.stringify(this.state.resetToNext)}`}</p>                      
                     </div>
                 </td>
               </tr>
