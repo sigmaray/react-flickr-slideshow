@@ -92,6 +92,10 @@ class App extends Component {
           // User inputted new search query and clicked on button
           this.setState({data: [], page: 1, dataPicNum: 0, resetToNewQuery: false});
           this.getData();
+        } else if (this.state.resetToNext10) {
+          this.setState({resetToNext10: false});
+          this.setState({page: this.state.page +10});
+          this.getData();
         } else if (this.state.resetToBack) {
           // alert('L101');
           this.setState({resetToBack: false});
