@@ -33,7 +33,8 @@ class App extends Component {
       resetToNext: false,
       resetToNext10: false,
       resetToNext100: false,
-      paused: false
+      paused: false,
+      loadingServerData: false
     };
 
     this.getData();
@@ -71,12 +72,14 @@ class App extends Component {
     }
   }
   getData() {
+    this.setState({loadingServerData: true});
     downloadPics(
       (data) => {
-        this.setState({data: data});
+        this.setState({loadingServerData: false, data: data});
         this.slideshowTimeout();
       },
       (message) => {
+        this.setState({loadingServerData: false});
         generateNoty(message);
         this.startCountDown(this.getData.bind(this), this.state.counter);
       },
@@ -228,6 +231,9 @@ class App extends Component {
                     <input type='button' value='Exampe: Paris' onClick={() => { this.handleExampmeButtonClick('Paris') }} />
                   </p>
                   <p>
+                    <input type='button' value='Exampe: France' onClick={() => { this.handleExampmeButtonClick('France') }} />
+                  </p>
+                  <p>
                     <input type='button' value='Exampe: Chicago' onClick={() => { this.handleExampmeButtonClick('Chicago') }} />
                   </p>
                   <p>
@@ -246,9 +252,9 @@ class App extends Component {
                   <p>
                     <input type='button' value='< Back' onClick={this.handleBackButtonClick} />
                   </p>
-                  <p>
+                  {/*<p>
                     <input type='button' value='<< Back 10' onClick={this.handleBack10ButtonClick} />
-                  </p>
+                  </p>*/}
                   <p>
                     <input type='button' value='Next >' onClick={this.handleNextButtonClick} />
                   </p>
@@ -266,10 +272,17 @@ class App extends Component {
                   </p>
                 </td>
                 <td width='1' style={{'padding-left': '20px'}}>
-                    {this.state.resetToNewQuery &&
-                      <div>..resetting to new query..</div>
-                    }
                     <div>
+                      {/*<p>
+                        {this.state.resetToNewQuery &&
+                          <div>..resetting to new query..</div>
+                        }
+                      </p>*/}
+                      <p>
+                        {this.state.loadingServerData &&
+                          <div>..loading xml from flickr..</div>
+                        }
+                      </p>
                       <p>{`query: ${JSON.stringify(this.state.query)}`}</p>
                       <p>{`[${JSON.stringify(this.state.dataPicNum + 1)}/${this.state.limit}] of page ${this.state.page}`} </p>
                       <p>{`page: ${JSON.stringify(this.state.page)}`}</p>
