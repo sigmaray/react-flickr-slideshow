@@ -222,22 +222,36 @@ class App extends Component {
                     <input type='button' value='Example: French Fries' onClick={() => { this.handleExampmeButtonClick('French Fries') }} />
                   </p>
                   <p>
-                    <input type='button' value='Example: Pasta' onClick={() => { this.handleExampmeButtonClick('Pasta') }} />
+                    <input type='button' value='Pasta' onClick={() => { this.handleExampmeButtonClick('Pasta') }} />
+                    &nbsp;&nbsp;&nbsp;
+                    <input type='button' value='Pizza' onClick={() => { this.handleExampmeButtonClick('Pizza') }} />
                   </p>
                   <p>
-                    <input type='button' value='Example: Pizza' onClick={() => { this.handleExampmeButtonClick('Pizza') }} />
+                    <input type='button' value='Paris' onClick={() => { this.handleExampmeButtonClick('Paris') }} />
+                    &nbsp;&nbsp;&nbsp;
+                    <input type='button' value='France' onClick={() => { this.handleExampmeButtonClick('France') }} />
                   </p>
                   <p>
-                    <input type='button' value='Exampe: Paris' onClick={() => { this.handleExampmeButtonClick('Paris') }} />
+                    <input type='button' value='Exampe: London' onClick={() => { this.handleExampmeButtonClick('London') }} />
                   </p>
                   <p>
-                    <input type='button' value='Exampe: France' onClick={() => { this.handleExampmeButtonClick('France') }} />
+                    <input type='button' value='England' onClick={() => { this.handleExampmeButtonClick('England') }} />
+                    &nbsp;&nbsp;&nbsp;
+                    <input type='button' value='UK' onClick={() => { this.handleExampmeButtonClick('UK') }} />
                   </p>
                   <p>
                     <input type='button' value='Exampe: Chicago' onClick={() => { this.handleExampmeButtonClick('Chicago') }} />
                   </p>
                   <p>
-                    <input type='button' value='Example: Berlin' onClick={() => { this.handleExampmeButtonClick('Berlin') }} />
+                    <input type='button' value='Berlin' onClick={() => { this.handleExampmeButtonClick('Berlin') }} />
+                    &nbsp;&nbsp;&nbsp;
+                    <input type='button' value='Germany' onClick={() => { this.handleExampmeButtonClick('Germany') }} />
+                  </p>
+                  <p>
+                    <input type='button' value='Example: Audi' onClick={() => { this.handleExampmeButtonClick('Audi') }} />
+                  </p>
+                  <p>
+                    <input type='button' value='Example: Porsche' onClick={() => { this.handleExampmeButtonClick('Porsche') }} />
                   </p>
                   <p>
                     <select ref='timeSelect' onChange={this.handleSelectChange}>
@@ -257,8 +271,7 @@ class App extends Component {
                   </p>*/}
                   <p>
                     <input type='button' value='Next >' onClick={this.handleNextButtonClick} />
-                  </p>
-                  <p>
+                    &nbsp;&nbsp;&nbsp;
                     <input type='button' value='Next 10 >>' onClick={this.handleNext10ButtonClick} />
                   </p>
                   <p>
@@ -266,8 +279,7 @@ class App extends Component {
                   </p>
                   <p>
                     <input type='button' value='Pause' onClick={this.handlePauseButtonClick} />
-                  </p>
-                  <p>
+                    &nbsp;&nbsp;&nbsp;
                     <input type='button' value='Unpause' onClick={this.handleUnpauseButtonClick} />
                   </p>
                 </td>
