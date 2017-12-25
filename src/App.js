@@ -240,7 +240,9 @@ class App extends Component {
                     <input type='button' value='UK' onClick={() => { this.handleExampmeButtonClick('UK') }} />
                   </p>
                   <p>
-                    <input type='button' value='Exampe: Chicago' onClick={() => { this.handleExampmeButtonClick('Chicago') }} />
+                    <input type='button' value='Chicago' onClick={() => { this.handleExampmeButtonClick('Chicago') }} />
+                    &nbsp;&nbsp;&nbsp;
+                    <input type='button' value='USA' onClick={() => { this.handleExampmeButtonClick('USA') }} />
                   </p>
                   <p>
                     <input type='button' value='Berlin' onClick={() => { this.handleExampmeButtonClick('Berlin') }} />
@@ -248,10 +250,12 @@ class App extends Component {
                     <input type='button' value='Germany' onClick={() => { this.handleExampmeButtonClick('Germany') }} />
                   </p>
                   <p>
-                    <input type='button' value='Example: Audi' onClick={() => { this.handleExampmeButtonClick('Audi') }} />
+                    <input type='button' value='Audi' onClick={() => { this.handleExampmeButtonClick('Audi') }} />
+                    &nbsp;&nbsp;&nbsp;
+                    <input type='button' value='Porsche' onClick={() => { this.handleExampmeButtonClick('Porsche') }} />
                   </p>
                   <p>
-                    <input type='button' value='Example: Porsche' onClick={() => { this.handleExampmeButtonClick('Porsche') }} />
+                    <input type='button' value='BMW' onClick={() => { this.handleExampmeButtonClick('BMW') }} />
                   </p>
                   <p>
                     <select ref='timeSelect' onChange={this.handleSelectChange}>
@@ -272,10 +276,10 @@ class App extends Component {
                   <p>
                     <input type='button' value='Next >' onClick={this.handleNextButtonClick} />
                     &nbsp;&nbsp;&nbsp;
-                    <input type='button' value='Next 10 >>' onClick={this.handleNext10ButtonClick} />
+                    <input type='button' value='Next 100 >>>' onClick={this.handleNext100ButtonClick} />
                   </p>
                   <p>
-                    <input type='button' value='Next 100 >>>' onClick={this.handleNext100ButtonClick} />
+                    <input type='button' value='Next 10 >>' onClick={this.handleNext10ButtonClick} />
                   </p>
                   <p>
                     <input type='button' value='Pause' onClick={this.handlePauseButtonClick} />
