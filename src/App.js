@@ -202,7 +202,15 @@ class App extends Component {
                 </td>
                 <td width='1' style={{'padding-left': '20px'}}>
                   <p>
-                    <input type='text' placeholder='searchQuery' value={this.state.inputQuery} onChange={this.handleInputChange} />
+                    <input
+                      type='text'
+                      placeholder='searchQuery'
+                      value={this.state.inputQuery}
+                      onChange={this.handleInputChange}
+                      onKeyPress={
+                        (e) => {(e.key === 'Enter' ? this.handleGoButtonClick() : null)}
+                      }
+                    />
                   </p>
                   <p>
                     <input type='button' value='Go!' onClick={this.handleGoButtonClick} ref='goButton' />
