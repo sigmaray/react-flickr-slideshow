@@ -92,37 +92,36 @@ class App extends Component {
           // User inputted new search query and clicked on button
           this.setState({data: [], page: 1, dataPicNum: 0, resetToNewQuery: false});
           this.getData();
-        } else {
-          if (this.state.resetToBack) {
-            // alert('L101');
-            this.setState({resetToBack: false});
+        } else if (this.state.resetToBack) {
+          // alert('L101');
+          this.setState({resetToBack: false});
 
-            if (this.state.dataPicNum - 1 >= 0 ) {
-              // alert('L105');
-              this.setState({dataPicNum: this.state.dataPicNum - 1});
-              this.slideshowTimeout();
-            } else {
-              // alert('L108');
-              if (this.state.page - 1 >= 1 ) {
-                // alert('L110');
-                this.setState({page: this.state.page - 1, dataPicNum: 9});
-                this.getData();
-              }
-            }
-          } else { // regular +1 or this.state.resetToNext
-            if (this.state.resetToNext) {
-              this.setState({resetToNext: false});
-            }
-
-            if (this.state.dataPicNum + 1 < this.state.data.length) {
-              this.setState({dataPicNum: this.state.dataPicNum + 1});
-              this.slideshowTimeout();
-            } else {
-              this.setState({page: this.state.page + 1, dataPicNum: 0});
+          if (this.state.dataPicNum - 1 >= 0 ) {
+            // alert('L105');
+            this.setState({dataPicNum: this.state.dataPicNum - 1});
+            this.slideshowTimeout();
+          } else {
+            // alert('L108');
+            if (this.state.page - 1 >= 1 ) {
+              // alert('L110');
+              this.setState({page: this.state.page - 1, dataPicNum: 9});
               this.getData();
             }
           }
+        } else { // regular +1 or this.state.resetToNext
+          if (this.state.resetToNext) {
+            this.setState({resetToNext: false});
+          }
+
+          if (this.state.dataPicNum + 1 < this.state.data.length) {
+            this.setState({dataPicNum: this.state.dataPicNum + 1});
+            this.slideshowTimeout();
+          } else {
+            this.setState({page: this.state.page + 1, dataPicNum: 0});
+            this.getData();
+          }
         }
+        
       }
       ,
       this.state.counter
