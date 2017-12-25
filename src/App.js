@@ -16,8 +16,10 @@ class App extends Component {
     this.state = {
       limit: 10,
       page: 1,
-      query: 'Romania',
-      inputQuery: 'Romania',
+      // query: 'Romania',
+      // inputQuery: 'Romania',
+      query: 'French Fries',
+      inputQuery: 'French Fries',
       data: [],
       dataPicNum: 0,
       resetToNewQuery: false,
@@ -27,7 +29,9 @@ class App extends Component {
       countdownS: 0,
       resetCounter: false,
       resetToBack: false,
+      resetToBack10: false,
       resetToNext: false,
+      resetToNext10: false,
       paused: false
     };
 
@@ -54,7 +58,7 @@ class App extends Component {
       var newC = this.state.countdownS - 1;
       this.setState({countdownS: newC});
     }
-    if ((!this.state.paused) && (this.state.countdownS == 0 || this.state.resetToNewQuery || this.state.resetToNext || this.state.resetToBack)) {
+    if ((!this.state.paused) && (this.state.countdownS == 0 || this.state.resetToNewQuery || this.state.resetToNext || this.state.resetToNext10 || this.state.resetToBack || this.state.resetToBack10)) {
        // if (this.state.resetToNewQuery) { this.setState({resetToNewQuery: false}) };
 
        clearTimeout(this.timer);
@@ -84,20 +88,12 @@ class App extends Component {
     this.setState({currentImage: this.state.data[this.state.dataPicNum]});
     this.startCountDown(
       () => {
-        if (!this.state.resetToNewQuery) {
-          if (this.state.resetToNext) {
-            this.setState({resetToNext: false});
-          }
-
-          if (!this.state.resetToBack) {
-            if (this.state.dataPicNum + 1 < this.state.data.length) {            
-              this.setState({dataPicNum: this.state.dataPicNum + 1});
-              this.slideshowTimeout();
-            } else {
-              this.setState({page: this.state.page + 1, dataPicNum: 0});
-              this.getData();
-            }
-          } else {
+        if (this.state.resetToNewQuery) {
+          // User inputted new search query and clicked on button
+          this.setState({data: [], page: 1, dataPicNum: 0, resetToNewQuery: false});
+          this.getData();
+        } else {
+          if (this.state.resetToBack) {
             // alert('L101');
             this.setState({resetToBack: false});
 
@@ -113,11 +109,19 @@ class App extends Component {
                 this.getData();
               }
             }
+          } else { // regular +1 or this.state.resetToNext
+            if (this.state.resetToNext) {
+              this.setState({resetToNext: false});
+            }
+
+            if (this.state.dataPicNum + 1 < this.state.data.length) {
+              this.setState({dataPicNum: this.state.dataPicNum + 1});
+              this.slideshowTimeout();
+            } else {
+              this.setState({page: this.state.page + 1, dataPicNum: 0});
+              this.getData();
+            }
           }
-        } else {
-          // User inputted new search query and clicked on button
-          this.setState({data: [], page: 1, dataPicNum: 0, resetToNewQuery: false});
-          this.getData();
         }
       }
       ,
@@ -148,6 +152,11 @@ class App extends Component {
       this.setState({resetToBack: true, paused: false});
     }
   }
+  handleBack10ButtonClick = () => {
+    if (!(this.state.page == 1 && this.state.dataPicNum == 0)) {
+      this.setState({resetToBack10: true, paused: false});
+    }
+  }
   handlePauseButtonClick = () => {
     this.setState({paused: true});
   }
@@ -156,6 +165,9 @@ class App extends Component {
   }
   handleNextButtonClick = () => {
     this.setState({resetToNext: true, paused: false});
+  }
+  handleNext10ButtonClick = () => {
+    this.setState({resetToNext10: true, paused: false});
   }
   render() {
     return (
@@ -180,6 +192,15 @@ class App extends Component {
                 <td width='1' style={{'padding-left': '20px'}}>
                   <p>
                     <input type='text' placeholder='searchQuery' value={this.state.inputQuery} onChange={this.handleInputChange} />
+                  </p>
+                  <p>
+                    <input type='button' value='Example: French Fries' onClick={() => { this.handleExampmeButtonClick('French Fries') }} />
+                  </p>
+                  <p>
+                    <input type='button' value='Example: Pasta' onClick={() => { this.handleExampmeButtonClick('Pasta') }} />
+                  </p>
+                  <p>
+                    <input type='button' value='Example: Pizza' onClick={() => { this.handleExampmeButtonClick('Pizza') }} />
                   </p>
                   <p>
                     <input type='button' value='Go!' onClick={this.handleGoButtonClick} ref='goButton' />
@@ -207,7 +228,13 @@ class App extends Component {
                     <input type='button' value='< Back' onClick={this.handleBackButtonClick} />
                   </p>
                   <p>
+                    <input type='button' value='<< Back 10' onClick={this.handleBack10ButtonClick} />
+                  </p>
+                  <p>
                     <input type='button' value='Next >' onClick={this.handleNextButtonClick} />
+                  </p>
+                  <p>
+                    <input type='button' value='Next 10 >>' onClick={this.handleNext10ButtonClick} />
                   </p>
                   <p>
                     <input type='button' value='Pause' onClick={this.handlePauseButtonClick} />
