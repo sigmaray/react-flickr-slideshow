@@ -32,6 +32,7 @@ class App extends Component {
       resetToBack10: false,
       resetToNext: false,
       resetToNext10: false,
+      resetToNext100: false,
       paused: false
     };
 
@@ -58,7 +59,7 @@ class App extends Component {
       var newC = this.state.countdownMs - 100;
       this.setState({countdownMs: newC});
     }
-    if ((!this.state.paused) && (this.state.countdownMs == 0 || this.state.resetToNewQuery || this.state.resetToNext || this.state.resetToNext10 || this.state.resetToBack || this.state.resetToBack10)) {
+    if ((!this.state.paused) && (this.state.countdownMs == 0 || this.state.resetToNewQuery || this.state.resetToNext || this.state.resetToNext10 || this.state.resetToNext100 || this.state.resetToBack || this.state.resetToBack10)) {
        // if (this.state.resetToNewQuery) { this.setState({resetToNewQuery: false}) };
 
        clearTimeout(this.timer);
@@ -94,7 +95,11 @@ class App extends Component {
           this.getData();
         } else if (this.state.resetToNext10) {
           this.setState({resetToNext10: false});
-          this.setState({page: this.state.page +10});
+          this.setState({page: this.state.page + 10});
+          this.getData();
+        } else if (this.state.resetToNext100) {
+          this.setState({resetToNext100: false});
+          this.setState({page: this.state.page + 100});
           this.getData();
         } else if (this.state.resetToBack) {
           // alert('L101');
@@ -172,6 +177,9 @@ class App extends Component {
   handleNext10ButtonClick = () => {
     this.setState({resetToNext10: true, paused: false});
   }
+  handleNext100ButtonClick = () => {
+    this.setState({resetToNext100: true, paused: false});
+  }
   render() {
     return (
       <div>
@@ -197,6 +205,9 @@ class App extends Component {
                     <input type='text' placeholder='searchQuery' value={this.state.inputQuery} onChange={this.handleInputChange} />
                   </p>
                   <p>
+                    <input type='button' value='Go!' onClick={this.handleGoButtonClick} ref='goButton' />
+                  </p>
+                  <p>
                     <input type='button' value='Example: French Fries' onClick={() => { this.handleExampmeButtonClick('French Fries') }} />
                   </p>
                   <p>
@@ -204,9 +215,6 @@ class App extends Component {
                   </p>
                   <p>
                     <input type='button' value='Example: Pizza' onClick={() => { this.handleExampmeButtonClick('Pizza') }} />
-                  </p>
-                  <p>
-                    <input type='button' value='Go!' onClick={this.handleGoButtonClick} ref='goButton' />
                   </p>
                   <p>
                     <input type='button' value='Exampe: Paris' onClick={() => { this.handleExampmeButtonClick('Paris') }} />
@@ -238,6 +246,9 @@ class App extends Component {
                   </p>
                   <p>
                     <input type='button' value='Next 10 >>' onClick={this.handleNext10ButtonClick} />
+                  </p>
+                  <p>
+                    <input type='button' value='Next 100 >>>' onClick={this.handleNext100ButtonClick} />
                   </p>
                   <p>
                     <input type='button' value='Pause' onClick={this.handlePauseButtonClick} />
