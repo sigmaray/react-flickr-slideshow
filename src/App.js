@@ -60,7 +60,7 @@ class App extends Component {
       var newC = this.state.countdownMs - 100;
       this.setState({countdownMs: newC});
     }
-    if ((!this.state.paused) && (this.state.countdownMs == 0 || this.state.resetToNewQuery || this.state.resetToNext || this.state.resetToNext10 || this.state.resetToNext100 || this.state.resetToBack || this.state.resetToBack10)) {
+    if (/*(!this.state.paused) &&*/ (this.state.countdownMs == 0 || this.state.resetToNewQuery || this.state.resetToNext || this.state.resetToNext10 || this.state.resetToNext100 || this.state.resetToBack || this.state.resetToBack10)) {
        // if (this.state.resetToNewQuery) { this.setState({resetToNewQuery: false}) };
 
        clearTimeout(this.timer);
@@ -144,7 +144,7 @@ class App extends Component {
   }
   handleSelectChange = (event) => {
     var v = parseInt(event.target.value);
-    this.setState({counter: v, countdownMs: v, resetCounter: true, paused: false});
+    this.setState({counter: v, countdownMs: v, resetCounter: true/*, paused: false*/});
   }
   handleGoButtonClick = () => {
     // var val = ReactDOM.findDOMNode(this.refs.goButton).value;
@@ -152,20 +152,20 @@ class App extends Component {
     if (!val) {
       generateNoty('Please input non empty string.');
     } else {
-      this.setState({query: val, resetToNewQuery: true, paused: false});
+      this.setState({query: val, resetToNewQuery: true/*, paused: false*/});
     }
   }
   handleExampmeButtonClick = (val) => {
-    this.setState({inputQuery: val, query: val, resetToNewQuery: true, paused: false});
+    this.setState({inputQuery: val, query: val, resetToNewQuery: true/*, paused: false*/});
   }
   handleBackButtonClick = () => {
     if (!(this.state.page == 1 && this.state.dataPicNum == 0)) {
-      this.setState({resetToBack: true, paused: false});
+      this.setState({resetToBack: true/*, paused: false*/});
     }
   }
   handleBack10ButtonClick = () => {
     if (!(this.state.page == 1 && this.state.dataPicNum == 0)) {
-      this.setState({resetToBack10: true, paused: false});
+      this.setState({resetToBack10: true/*, paused: false*/});
     }
   }
   handlePauseButtonClick = () => {
@@ -175,13 +175,13 @@ class App extends Component {
     this.setState({paused: false});
   }
   handleNextButtonClick = () => {
-    this.setState({resetToNext: true, paused: false});
+    this.setState({resetToNext: true/*, paused: false*/});
   }
   handleNext10ButtonClick = () => {
-    this.setState({resetToNext10: true, paused: false});
+    this.setState({resetToNext10: true/*, paused: false*/});
   }
   handleNext100ButtonClick = () => {
-    this.setState({resetToNext100: true, paused: false});
+    this.setState({resetToNext100: true/*, paused: false*/});
   }
   render() {
     return (
