@@ -72,6 +72,7 @@ class App extends Component {
     }
   }
   getData() {
+    document.title = `${this.state.query} - Flickr Slideshow`;
     this.setState({loadingServerData: true});
     downloadPics(
       (data) => {
@@ -302,13 +303,13 @@ class App extends Component {
                       <p>{`query: ${JSON.stringify(this.state.query)}`}</p>
                       <p>{`[${JSON.stringify(this.state.dataPicNum + 1)}/${this.state.limit}] of page ${this.state.page}`} </p>
                       <p>{`page: ${JSON.stringify(this.state.page)}`}</p>
-                      <p>{`dataPicNum: ${JSON.stringify(this.state.dataPicNum)}`}</p>
-                      <p>{`timeOut: ${JSON.stringify(this.state.timeOut)} ms`}</p>
+                      {/*<p>{`dataPicNum: ${JSON.stringify(this.state.dataPicNum)}`}</p>
+                      <p>{`timeOut: ${JSON.stringify(this.state.timeOut)} ms`}</p>*/}
                       <p>{`countdownMs: ${JSON.stringify(this.state.countdownMs)}`}</p>
-                      <p>{`counter: ${JSON.stringify(this.state.counter)}`}</p>
+                      {/*<p>{`counter: ${JSON.stringify(this.state.counter)}`}</p>*/}
                       <p>{`paused: ${JSON.stringify(this.state.paused)}`}</p>
-                      <p>{`resetToBack: ${JSON.stringify(this.state.resetToBack)}`}</p>
-                      <p>{`resetToNext: ${JSON.stringify(this.state.resetToNext)}`}</p>                      
+                      {/*<p>{`resetToBack: ${JSON.stringify(this.state.resetToBack)}`}</p>
+                      <p>{`resetToNext: ${JSON.stringify(this.state.resetToNext)}`}</p>*/}
                     </div>
                 </td>
               </tr>
