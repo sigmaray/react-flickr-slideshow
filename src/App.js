@@ -276,10 +276,10 @@ class App extends Component {
                   <p>
                     <input type='button' value='Next >' onClick={this.handleNextButtonClick} />
                     &nbsp;&nbsp;&nbsp;
-                    <input type='button' value='Next 100 >>>' onClick={this.handleNext100ButtonClick} />
+                    <input type='button' value='Next 10 >>' onClick={this.handleNext10ButtonClick} />
                   </p>
                   <p>
-                    <input type='button' value='Next 10 >>' onClick={this.handleNext10ButtonClick} />
+                    <input type='button' value='Next 100 >>>' onClick={this.handleNext100ButtonClick} />
                   </p>
                   <p>
                     <input type='button' value='Pause' onClick={this.handlePauseButtonClick} />
