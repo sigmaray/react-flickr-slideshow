@@ -10,16 +10,15 @@ class App extends Component {
   constructor() {
     super();
 
-    this.counter = 10000;
     this.timer = null;
 
     this.state = {
       limit: 10,
       page: 1,
-      // query: 'Romania',
-      // inputQuery: 'Romania',
-      query: 'French Fries',
-      inputQuery: 'French Fries',
+      query: 'Romania',
+      inputQuery: 'Romania',
+      // query: 'French Fries',
+      // inputQuery: 'French Fries',
       data: [],
       dataPicNum: 0,
       resetToNewQuery: false,
@@ -38,24 +37,15 @@ class App extends Component {
     };
 
     this.getData();
-
-    // this.startCountDown(() => {
-    //   // alert('finished');
-    // });
   }
   startCountDown = (finishCallback, ms) => {
-    // alert(this.state.counter);
     this.setState({countdownMs: ms});
     // setTimeout(() => { 
       this.setState({countdownMs: this.state.counter});
-      // alert(this.state.countdownMs);
       this.timer = setTimeout(() => { this.countDown(finishCallback); }, 1000);
     // }, 1000)
   }
   countDown = (finishCallback) => {
-    // alert('L34');
-    // this.counter = this.counter - 1;
-    // alert(JSON.stringify(this.state));
     if (!this.state.paused) {
       var newC = this.state.countdownMs - 100;
       this.setState({countdownMs: newC});
@@ -106,17 +96,13 @@ class App extends Component {
           this.setState({page: this.state.page + 100});
           this.getData();
         } else if (this.state.resetToBack) {
-          // alert('L101');
           this.setState({resetToBack: false});
 
           if (this.state.dataPicNum - 1 >= 0 ) {
-            // alert('L105');
             this.setState({dataPicNum: this.state.dataPicNum - 1});
             this.slideshowTimeout();
           } else {
-            // alert('L108');
             if (this.state.page - 1 >= 1 ) {
-              // alert('L110');
               this.setState({page: this.state.page - 1, dataPicNum: 9});
               this.getData();
             }
