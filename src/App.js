@@ -281,11 +281,6 @@ class App extends Component {
                 </td>
                 <td width='1' style={{'padding-left': '20px'}}>
                     <div>
-                      {/*<p>
-                        {this.state.resetToNewQuery &&
-                          <div>..resetting to new query..</div>
-                        }
-                      </p>*/}
                       <p>
                         {this.state.loadingServerData &&
                           <div>..loading xml from flickr..</div>
