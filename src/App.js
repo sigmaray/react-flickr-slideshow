@@ -6,6 +6,8 @@ import VCenter from './partials/VCenter';
 import downloadPics from './flickr';
 import generateNoty from './generateNoty';
 
+var API_KEY = '4cc2a6e2419deebfe86eca026cfda157';
+
 class App extends Component {
   constructor() {
     super();
@@ -65,6 +67,7 @@ class App extends Component {
     document.title = `${this.state.query ? this.state.query + ' - ' : '' }Flickr Slideshow`;
     this.setState({loadingServerData: true});
     downloadPics(
+      API_KEY,
       (data) => {
         this.setState({loadingServerData: false, data: data});
         this.slideshowTimeout();
