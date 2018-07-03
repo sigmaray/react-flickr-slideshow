@@ -147,8 +147,8 @@ class App extends Component {
     this.setState({counter: v, countdownMs: v, resetCounter: true/*, paused: false*/});
   }
   handleGoButtonClick = () => {
-    // var val = ReactDOM.findDOMNode(this.refs.goButton).value;
-    var val = this.state.inputQuery;
+    // const val = ReactDOM.findDOMNode(this.refs.goButton).value;
+    const val = this.state.inputQuery;
     if (!val) {
       generateNoty('Please input non empty string.');
     } else {
