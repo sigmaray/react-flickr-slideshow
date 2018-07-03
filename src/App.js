@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import './App.css';
 import VCenter from './partials/VCenter';
-import downloadPics from './flickr';
+import downloadPicListFromFlickr from './flickr';
 import generateNoty from './generateNoty';
 
 var API_KEY = '4cc2a6e2419deebfe86eca026cfda157';
@@ -66,7 +66,7 @@ class App extends Component {
   getData() {
     document.title = `${this.state.query ? this.state.query + ' - ' : '' }Flickr Slideshow`;
     this.setState({loadingServerData: true});
-    downloadPics(
+    downloadPicListFromFlickr(
       API_KEY,
       (data) => {
         this.setState({loadingServerData: false, data: data});
@@ -178,7 +178,6 @@ class App extends Component {
       <div>
         <div>
           <center>
-            
             <table width='100%'>
               <tr>
                 <td width='100%' ref='td1'>
@@ -306,16 +305,6 @@ class App extends Component {
                 </td>
               </tr>
             </table>
-            {/*this.state.data.map((item) =>
-              <p>
-                {JSON.stringify(item)}
-                <div>
-                  <a href={item.flickrUrl}>
-                    <img src={item.src} width='20' />
-                  </a>
-                </div>
-              </p>
-            )*/}
           </center>
         </div>
       </div>
