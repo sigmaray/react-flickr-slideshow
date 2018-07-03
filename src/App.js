@@ -24,6 +24,7 @@ class App extends Component {
       dataPicNum: 0,
       resetToNewQuery: false,
       currentImage: null,
+      timeOut: 5000,
       counter: 10000,
       countdownMs: 0,
       resetCounter: false,
