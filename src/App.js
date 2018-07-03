@@ -52,7 +52,18 @@ class App extends Component {
       var newC = this.state.countdownMs - 100;
       this.setState({countdownMs: newC});
     }
-    if (/*(!this.state.paused) &&*/ (this.state.countdownMs == 0 || this.state.resetToNewQuery || this.state.resetToNext || this.state.resetToNext10 || this.state.resetToNext100 || this.state.resetToBack || this.state.resetToBack10)) {
+    if (
+      /*(!this.state.paused) &&*/
+      (
+        this.state.countdownMs == 0
+        ||this.state.resetToNewQuery
+        || this.state.resetToNext
+        || this.state.resetToNext10
+        || this.state.resetToNext100
+        || this.state.resetToBack
+        || this.state.resetToBack10
+      )
+    ) {
        // if (this.state.resetToNewQuery) { this.setState({resetToNewQuery: false}) };
 
        clearTimeout(this.timer);
@@ -286,7 +297,7 @@ class App extends Component {
                         }
                       </p>
                       <p>{`query: ${JSON.stringify(this.state.query)}`}</p>
-                      <p>{`[${JSON.stringify(this.state.dataPicNum + 1)}/${this.state.limit}] of page ${this.state.page}`} </p>
+                      <p>{`[${JSON.stringify(this.state.dataPicNum + 1)}/${this.state.limit}]`} </p>
                       <p>{`page: ${JSON.stringify(this.state.page)}`}</p>
                       <p>{`countdownMs: ${JSON.stringify(this.state.countdownMs)}`}</p>
                       <p>{`paused: ${JSON.stringify(this.state.paused)}`}</p>
