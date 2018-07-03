@@ -6,7 +6,7 @@ import VCenter from './partials/VCenter';
 import downloadPicListFromFlickr from './flickr';
 import generateNoty from './generateNoty';
 
-var API_KEY = '4cc2a6e2419deebfe86eca026cfda157';
+const API_KEY = '4cc2a6e2419deebfe86eca026cfda157';
 
 class App extends Component {
   constructor() {
@@ -49,7 +49,7 @@ class App extends Component {
   }
   countDown = (finishCallback) => {
     if (!this.state.paused) {
-      var newC = this.state.countdownMs - 100;
+      const newC = this.state.countdownMs - 100;
       this.setState({countdownMs: newC});
     }
     if (
@@ -143,7 +143,7 @@ class App extends Component {
     this.setState({inputQuery: event.target.value});
   }
   handleSelectChange = (event) => {
-    var v = parseInt(event.target.value);
+    const v = parseInt(event.target.value);
     this.setState({counter: v, countdownMs: v, resetCounter: true/*, paused: false*/});
   }
   handleGoButtonClick = () => {
@@ -188,9 +188,9 @@ class App extends Component {
       <div>
         <div>
           <center>
-            <table width='100%'>
+            <table style={{width: '100%'}}>
               <tr>
-                <td width='100%' ref='td1'>
+                <td style={{width: '100%'}} ref='td1'>
                 {
                   this.state.currentImage != null
                   ?
@@ -202,7 +202,7 @@ class App extends Component {
                   <p>...loading data...</p>
                 }
                 </td>
-                <td width='1' style={{'padding-left': '20px'}} valign='top'>
+                <td  style={{width: '1px'}} style={{'padding-left': '20px', 'vertical-align': 'top'}}>
                   <p>
                     <input
                       type='text'
@@ -289,7 +289,7 @@ class App extends Component {
                     <input type='button' value='Unpause' onClick={this.handleUnpauseButtonClick} />
                   </p>
                 </td>
-                <td width='1' style={{'padding-left': '20px'}}>
+                <td style={{width: '1px', 'padding-left': '20px'}}>
                     <div>
                       <p>
                         {this.state.loadingServerData &&
