@@ -40,6 +40,7 @@ class App extends Component {
 
     this.getData();
   }
+
   startCountDown = (finishCallback, ms) => {
     this.setState({countdownMs: ms});
     // setTimeout(() => { 
@@ -47,6 +48,7 @@ class App extends Component {
       this.timer = setTimeout(() => { this.countDown(finishCallback); }, 1000);
     // }, 1000)
   }
+
   countDown = (finishCallback) => {
     if (!this.state.paused) {
       const newC = this.state.countdownMs - 100;
@@ -74,6 +76,7 @@ class App extends Component {
       this.timer = setTimeout(() => { this.countDown(finishCallback); }, 100);
     }
   }
+
   getData() {
     document.title = `${this.state.query ? this.state.query + ' - ' : '' }Flickr Slideshow`;
     this.setState({loadingServerData: true});
@@ -93,6 +96,7 @@ class App extends Component {
       this.state.limit
     )
   }
+
   slideshowTimeout = () => {
     this.setState({currentImage: this.state.data[this.state.dataPicNum]});
     this.startCountDown(
@@ -139,13 +143,16 @@ class App extends Component {
       this.state.counter
     );
   }
+
   handleInputChange = (event) => {
     this.setState({inputQuery: event.target.value});
   }
+
   handleSelectChange = (event) => {
     const v = parseInt(event.target.value);
     this.setState({counter: v, countdownMs: v, resetCounter: true/*, paused: false*/});
   }
+
   handleGoButtonClick = () => {
     // const val = ReactDOM.findDOMNode(this.refs.goButton).value;
     const val = this.state.inputQuery;
@@ -155,34 +162,43 @@ class App extends Component {
       this.setState({query: val, resetToNewQuery: true/*, paused: false*/});
     }
   }
+
   handleExampmeButtonClick = (val) => {
     this.setState({inputQuery: val, query: val, resetToNewQuery: true/*, paused: false*/});
   }
+
   handleBackButtonClick = () => {
     if (!(this.state.page == 1 && this.state.dataPicNum == 0)) {
       this.setState({resetToBack: true/*, paused: false*/});
     }
   }
+
   handleBack10ButtonClick = () => {
     if (!(this.state.page == 1 && this.state.dataPicNum == 0)) {
       this.setState({resetToBack10: true/*, paused: false*/});
     }
   }
+
   handlePauseButtonClick = () => {
     this.setState({paused: true});
   }
+
   handleUnpauseButtonClick = () => {
     this.setState({paused: false});
   }
+
   handleNextButtonClick = () => {
     this.setState({resetToNext: true/*, paused: false*/});
   }
+
   handleNext10ButtonClick = () => {
     this.setState({resetToNext10: true/*, paused: false*/});
   }
+
   handleNext100ButtonClick = () => {
     this.setState({resetToNext100: true/*, paused: false*/});
   }
+
   render() {
     return (
       <div>
