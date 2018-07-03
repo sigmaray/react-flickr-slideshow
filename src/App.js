@@ -15,10 +15,9 @@ class App extends Component {
     this.state = {
       limit: 10,
       page: 1,
-      query: 'Romania',
-      inputQuery: 'Romania',
+      query: '',
+      // query: 'Romania',
       // query: 'French Fries',
-      // inputQuery: 'French Fries',
       data: [],
       dataPicNum: 0,
       resetToNewQuery: false,
@@ -35,6 +34,7 @@ class App extends Component {
       paused: false,
       loadingServerData: false
     };
+    this.state.inputQuery = this.state.query;
 
     this.getData();
   }
@@ -62,7 +62,7 @@ class App extends Component {
     }
   }
   getData() {
-    document.title = `${this.state.query} - Flickr Slideshow`;
+    document.title = `${this.state.query ? this.state.query + ' - ' : '' }Flickr Slideshow`;
     this.setState({loadingServerData: true});
     downloadPics(
       (data) => {
@@ -173,7 +173,7 @@ class App extends Component {
   render() {
     return (
       <div>
-        <VCenter>
+        <div>
           <center>
             
             <table width='100%'>
@@ -190,7 +190,7 @@ class App extends Component {
                   <p>...loading data...</p>
                 }
                 </td>
-                <td width='1' style={{'padding-left': '20px'}}>
+                <td width='1' style={{'padding-left': '20px'}} valign='top'>
                   <p>
                     <input
                       type='text'
@@ -243,6 +243,9 @@ class App extends Component {
                   </p>
                   <p>
                     <input type='button' value='BMW' onClick={() => { this.handleExampmeButtonClick('BMW') }} />
+                  </p>
+                  <p>
+                    <input type='button' value='All Pictures' onClick={() => { this.handleExampmeButtonClick('') }} />
                   </p>
                   <p>
                     <select ref='timeSelect' onChange={this.handleSelectChange}>
@@ -311,7 +314,7 @@ class App extends Component {
               </p>
             )*/}
           </center>
-        </VCenter>
+        </div>
       </div>
     );
   }

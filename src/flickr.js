@@ -8,9 +8,15 @@ var PER_PAGE = 20;
 // @param string pic - Search query for flickr.
 // @param string page = 1 
 // @param string per_page = PER_PAGE
-export default function downloadPics(successCallback, errorCallback, pic = 'chicago', page = 1, per_page = PER_PAGE) {
+export default function downloadPics(successCallback, errorCallback, pic = '', page = 1, per_page = PER_PAGE) {
   var imgs = [];
-  var url = 'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=' + API_KEY + '&text=' + pic + '&safe_search=1&page=' + page + '&per_page=' + per_page;
+  let url = '';
+  if (pic) {
+    url = 'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=' + API_KEY + '&text=' + pic + '&safe_search=1&page=' + page + '&per_page=' + per_page;
+  }
+  else {
+    url = 'https://api.flickr.com/services/rest/?method=flickr.photos.getRecent&api_key=' + API_KEY + '&safe_search=1&page=' + page + '&per_page=' + per_page;
+  }
   $.ajax({
     dataType: "json",
     url: url + '&format=json&jsoncallback=?',
