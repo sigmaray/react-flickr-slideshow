@@ -2,8 +2,7 @@ import * as $ from 'jquery';
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import './App.css';
-import VCenter from './partials/VCenter';
-import downloadPicListFromFlickr from './flickr';
+import gitFlickrPicsList from './flickr';
 import generateNoty from './generateNoty';
 
 const API_KEY = '4cc2a6e2419deebfe86eca026cfda157';
@@ -80,7 +79,7 @@ class App extends Component {
   getData() {
     document.title = `${this.state.query ? this.state.query + ' - ' : '' }Flickr Slideshow`;
     this.setState({loadingServerData: true});
-    downloadPicListFromFlickr(
+    gitFlickrPicsList(
       API_KEY,
       (data) => {
         this.setState({loadingServerData: false, data: data});
@@ -218,7 +217,7 @@ class App extends Component {
                   <p>...loading data...</p>
                 }
                 </td>
-                <td  style={{width: '1px'}} style={{'padding-left': '20px', 'vertical-align': 'top'}}>
+                <td style={{'padding-left': '20px', 'vertical-align': 'top'}} nowrap="nowrap">
                   <p>
                     <input
                       type='text'
@@ -233,8 +232,9 @@ class App extends Component {
                   <p>
                     <input type='button' value='Go!' onClick={this.handleGoButtonClick} ref='goButton' />
                   </p>
+                  <hr />
                   <p>
-                    <input type='button' value='Example: French Fries' onClick={() => { this.handleExampmeButtonClick('French Fries') }} />
+                    <input type='button' value='French Fries' onClick={() => { this.handleExampmeButtonClick('French Fries') }} />
                   </p>
                   <p>
                     <input type='button' value='Pasta' onClick={() => { this.handleExampmeButtonClick('Pasta') }} />
@@ -247,7 +247,7 @@ class App extends Component {
                     <input type='button' value='France' onClick={() => { this.handleExampmeButtonClick('France') }} />
                   </p>
                   <p>
-                    <input type='button' value='Exampe: London' onClick={() => { this.handleExampmeButtonClick('London') }} />
+                    <input type='button' value='London' onClick={() => { this.handleExampmeButtonClick('London') }} />
                   </p>
                   <p>
                     <input type='button' value='England' onClick={() => { this.handleExampmeButtonClick('England') }} />
@@ -261,7 +261,8 @@ class App extends Component {
                   </p>
                   <p>
                     <input type='button' value='Berlin' onClick={() => { this.handleExampmeButtonClick('Berlin') }} />
-                    &nbsp;&nbsp;&nbsp;
+                  </p>
+                  <p>
                     <input type='button' value='Germany' onClick={() => { this.handleExampmeButtonClick('Germany') }} />
                   </p>
                   <p>
@@ -275,14 +276,12 @@ class App extends Component {
                   <p>
                     <input type='button' value='All Pictures' onClick={() => { this.handleExampmeButtonClick('') }} />
                   </p>
+                  <hr />
                   <p>
                     <select ref='timeSelect' onChange={this.handleSelectChange}>
-                      <option value='1000' selected={this.state.counter == 1000}>1 sec</option>
-                      <option value='3000' selected={this.state.counter == 3000}>3 sec</option>
-                      <option value='5000' selected={this.state.counter == 5000}>5 sec</option>
-                      <option value='10000' selected={this.state.counter == 10000}>10 sec</option>
-                      <option value='30000' selected={this.state.counter == 30000}>30 sec</option>
-                      <option value='60000' selected={this.state.counter == 60000}>60 sec</option>
+                      {[1, 3, 4, 10, 30, 60].map((num) =>  
+                          <option value={num * 1000} selected={this.state.counter == (num * 1000)}>{num} sec</option>
+                      )}
                     </select>
                   </p>
                   <p>
@@ -305,7 +304,7 @@ class App extends Component {
                     <input type='button' value='Unpause' onClick={this.handleUnpauseButtonClick} />
                   </p>
                 </td>
-                <td style={{width: '1px', 'padding-left': '20px'}}>
+                <td style={{width: '1px', 'padding-left': '20px'}} nowrap="nowrap">
                     <div>
                       <p>
                         {this.state.loadingServerData &&
@@ -315,7 +314,7 @@ class App extends Component {
                       <p>{`query: ${JSON.stringify(this.state.query)}`}</p>
                       <p>{`[${JSON.stringify(this.state.dataPicNum + 1)}/${this.state.limit}]`} </p>
                       <p>{`page: ${JSON.stringify(this.state.page)}`}</p>
-                      <p>{`countdownMs: ${JSON.stringify(this.state.countdownMs)}`}</p>
+                      <p>countdownMs: <br />{JSON.stringify(this.state.countdownMs)}</p>
                       <p>{`paused: ${JSON.stringify(this.state.paused)}`}</p>
                     </div>
                 </td>

@@ -5,7 +5,7 @@ import * as $ from 'jquery';
 // @param string searchQuery | search query for flickr.
 // @param string page = 1 
 // @param string per_page = 20
-export default function downloadPicListFromFlickr(apiKey, successCallback, errorCallback, searchQuery = '', page = 1, per_page = 20) {
+export default function gitFlickrPicsList(apiKey, successCallback, errorCallback, searchQuery = '', page = 1, per_page = 20) {
   let imgs = [];
   const method = searchQuery ? 'flickr.photos.search' : 'flickr.photos.getRecent';
   const url = `https://api.flickr.com/services/rest/?method=${method}&api_key=${apiKey}&text=${searchQuery}&safe_search=1&page=${page}&per_page=${per_page}`;
