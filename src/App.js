@@ -6,6 +6,7 @@ import gitFlickrPicsList from './flickr';
 import generateNoty from './generateNoty';
 
 const API_KEY = '4cc2a6e2419deebfe86eca026cfda157';
+const CHUNK_SIZE = 10;
 
 class App extends Component {
   constructor() {
@@ -14,26 +15,21 @@ class App extends Component {
     this.timer = null;
 
     this.state = {
-      limit: 10,
       page: 1,
       query: '',
-      // query: 'Romania',
-      // query: 'French Fries',
       data: [],
-      dataPicNum: 0,
+      chunkPicNum: 0,
+      currentFlickrImageData: null,
+      countdown: 10000,
+      currentCountdown: 0,
+      paused: false,
+      loadingServerData: false,
       resetToNewQuery: false,
-      currentImage: null,
-      timeOut: 5000,
-      counter: 10000,
-      countdownMs: 0,
-      resetCounter: false,
       resetToBack: false,
       resetToBack10: false,
       resetToNext: false,
       resetToNext10: false,
-      resetToNext100: false,
-      paused: false,
-      loadingServerData: false
+      resetToNext100: false
     };
     this.state.inputQuery = this.state.query;
 
@@ -41,22 +37,19 @@ class App extends Component {
   }
 
   startCountDown = (finishCallback, ms) => {
-    this.setState({countdownMs: ms});
-    // setTimeout(() => { 
-      this.setState({countdownMs: this.state.counter});
-      this.timer = setTimeout(() => { this.countDown(finishCallback); }, 1000);
-    // }, 1000)
+    this.setState({currentCountdown: ms});
+    this.setState({currentCountdown: this.state.countdown});
+    this.timer = setTimeout(() => { this.countDown(finishCallback); }, 1000);
   }
 
   countDown = (finishCallback) => {
     if (!this.state.paused) {
-      const newC = this.state.countdownMs - 100;
-      this.setState({countdownMs: newC});
+      const newC = this.state.currentCountdown - 100;
+      this.setState({currentCountdown: newC});
     }
     if (
-      /*(!this.state.paused) &&*/
       (
-        this.state.countdownMs == 0
+        this.state.currentCountdown == 0
         ||this.state.resetToNewQuery
         || this.state.resetToNext
         || this.state.resetToNext10
@@ -65,8 +58,6 @@ class App extends Component {
         || this.state.resetToBack10
       )
     ) {
-       // if (this.state.resetToNewQuery) { this.setState({resetToNewQuery: false}) };
-
        clearTimeout(this.timer);
        this.timer = null;
        finishCallback();
@@ -77,7 +68,6 @@ class App extends Component {
   }
 
   getData() {
-    document.title = `${this.state.query ? this.state.query + ' - ' : '' }Flickr Slideshow`;
     this.setState({loadingServerData: true});
     gitFlickrPicsList(
       API_KEY,
@@ -88,21 +78,21 @@ class App extends Component {
       (message) => {
         this.setState({loadingServerData: false});
         generateNoty(message);
-        this.startCountDown(this.getData.bind(this), this.state.counter);
+        this.startCountDown(this.getData.bind(this), this.state.countdown);
       },
       this.state.query,
       this.state.page,
-      this.state.limit
+      CHUNK_SIZE
     )
   }
 
   slideshowTimeout = () => {
-    this.setState({currentImage: this.state.data[this.state.dataPicNum]});
+    this.setState({currentFlickrImageData: this.state.data[this.state.chunkPicNum]});
     this.startCountDown(
       () => {
         if (this.state.resetToNewQuery) {
-          // User inputted new search query and clicked on button
-          this.setState({data: [], page: 1, dataPicNum: 0, resetToNewQuery: false});
+          document.title = `${this.state.query ? this.state.query + ' - ' : '' }Flickr Slideshow`;
+          this.setState({data: [], page: 1, chunkPicNum: 0, resetToNewQuery: false});
           this.getData();
         } else if (this.state.resetToNext10) {
           this.setState({resetToNext10: false});
@@ -115,66 +105,65 @@ class App extends Component {
         } else if (this.state.resetToBack) {
           this.setState({resetToBack: false});
 
-          if (this.state.dataPicNum - 1 >= 0 ) {
-            this.setState({dataPicNum: this.state.dataPicNum - 1});
+          if (this.state.chunkPicNum - 1 >= 0 ) {
+            this.setState({chunkPicNum: this.state.chunkPicNum - 1});
             this.slideshowTimeout();
           } else {
             if (this.state.page - 1 >= 1 ) {
-              this.setState({page: this.state.page - 1, dataPicNum: 9});
+              this.setState({page: this.state.page - 1, chunkPicNum: 9});
               this.getData();
             }
           }
-        } else { // regular +1 or this.state.resetToNext
+        } else {
           if (this.state.resetToNext) {
             this.setState({resetToNext: false});
           }
 
-          if (this.state.dataPicNum + 1 < this.state.data.length) {
-            this.setState({dataPicNum: this.state.dataPicNum + 1});
+          if (this.state.chunkPicNum + 1 < this.state.data.length) {
+            this.setState({chunkPicNum: this.state.chunkPicNum + 1});
             this.slideshowTimeout();
           } else {
-            this.setState({page: this.state.page + 1, dataPicNum: 0});
+            this.setState({page: this.state.page + 1, chunkPicNum: 0});
             this.getData();
           }
         }
       }
       ,
-      this.state.counter
+      this.state.countdown
     );
   }
 
-  handleInputChange = (event) => {
+  handleQueryInputChange = (event) => {
     this.setState({inputQuery: event.target.value});
   }
 
-  handleSelectChange = (event) => {
+  handleCountdownSelectChange = (event) => {
     const v = parseInt(event.target.value);
-    this.setState({counter: v, countdownMs: v, resetCounter: true/*, paused: false*/});
+    this.setState({countdown: v, currentCountdown: v});
   }
 
   handleGoButtonClick = () => {
-    // const val = ReactDOM.findDOMNode(this.refs.goButton).value;
     const val = this.state.inputQuery;
     if (!val) {
       generateNoty('Please input non empty string.');
     } else {
-      this.setState({query: val, resetToNewQuery: true/*, paused: false*/});
+      this.setState({query: val, resetToNewQuery: true});
     }
   }
 
-  handleExampmeButtonClick = (val) => {
-    this.setState({inputQuery: val, query: val, resetToNewQuery: true/*, paused: false*/});
+  handleExampleButtonClick = (val) => {
+    this.setState({inputQuery: val, query: val, resetToNewQuery: true});
   }
 
   handleBackButtonClick = () => {
-    if (!(this.state.page == 1 && this.state.dataPicNum == 0)) {
-      this.setState({resetToBack: true/*, paused: false*/});
+    if (!(this.state.page == 1 && this.state.chunkPicNum == 0)) {
+      this.setState({resetToBack: true});
     }
   }
 
   handleBack10ButtonClick = () => {
-    if (!(this.state.page == 1 && this.state.dataPicNum == 0)) {
-      this.setState({resetToBack10: true/*, paused: false*/});
+    if (!(this.state.page == 1 && this.state.chunkPicNum == 0)) {
+      this.setState({resetToBack10: true});
     }
   }
 
@@ -187,15 +176,15 @@ class App extends Component {
   }
 
   handleNextButtonClick = () => {
-    this.setState({resetToNext: true/*, paused: false*/});
+    this.setState({resetToNext: true});
   }
 
   handleNext10ButtonClick = () => {
-    this.setState({resetToNext10: true/*, paused: false*/});
+    this.setState({resetToNext10: true});
   }
 
   handleNext100ButtonClick = () => {
-    this.setState({resetToNext100: true/*, paused: false*/});
+    this.setState({resetToNext100: true});
   }
 
   render() {
@@ -205,13 +194,12 @@ class App extends Component {
           <center>
             <table style={{width: '100%'}}>
               <tr>
-                <td style={{width: '100%'}} ref='td1'>
+                <td style={{width: '100%'}}>
                 {
-                  this.state.currentImage != null
+                  this.state.currentFlickrImageData != null
                   ?
-                  <a href={this.state.currentImage.flickrUrl} target='_blank'>
-                    {/*<img src={this.state.currentImage.src} style={{'max-width': `${window.document.body.clientWidth * 0.6}px`}} />*/}
-                    <img src={this.state.currentImage.src} style={{'max-width': `100%`, 'max-height': `${window.innerHeight - 10}px`}} />
+                  <a href={this.state.currentFlickrImageData.flickrUrl} target='_blank'>
+                    <img src={this.state.currentFlickrImageData.src} style={{'max-width': `100%`, 'max-height': `${window.innerHeight - 10}px`}} />
                   </a>
                   :
                   <p>...loading data...</p>
@@ -223,7 +211,7 @@ class App extends Component {
                       type='text'
                       placeholder='searchQuery'
                       value={this.state.inputQuery}
-                      onChange={this.handleInputChange}
+                      onChange={this.handleQueryInputChange}
                       onKeyPress={
                         (e) => {(e.key === 'Enter' ? this.handleGoButtonClick() : null)}
                       }
@@ -234,53 +222,53 @@ class App extends Component {
                   </p>
                   <hr />
                   <p>
-                    <input type='button' value='French Fries' onClick={() => { this.handleExampmeButtonClick('French Fries') }} />
+                    <input type='button' value='French Fries' onClick={() => { this.handleExampleButtonClick('French Fries') }} />
                   </p>
                   <p>
-                    <input type='button' value='Pasta' onClick={() => { this.handleExampmeButtonClick('Pasta') }} />
+                    <input type='button' value='Pasta' onClick={() => { this.handleExampleButtonClick('Pasta') }} />
                     &nbsp;&nbsp;&nbsp;
-                    <input type='button' value='Pizza' onClick={() => { this.handleExampmeButtonClick('Pizza') }} />
+                    <input type='button' value='Pizza' onClick={() => { this.handleExampleButtonClick('Pizza') }} />
                   </p>
                   <p>
-                    <input type='button' value='Paris' onClick={() => { this.handleExampmeButtonClick('Paris') }} />
+                    <input type='button' value='Paris' onClick={() => { this.handleExampleButtonClick('Paris') }} />
                     &nbsp;&nbsp;&nbsp;
-                    <input type='button' value='France' onClick={() => { this.handleExampmeButtonClick('France') }} />
+                    <input type='button' value='France' onClick={() => { this.handleExampleButtonClick('France') }} />
                   </p>
                   <p>
-                    <input type='button' value='London' onClick={() => { this.handleExampmeButtonClick('London') }} />
+                    <input type='button' value='London' onClick={() => { this.handleExampleButtonClick('London') }} />
                   </p>
                   <p>
-                    <input type='button' value='England' onClick={() => { this.handleExampmeButtonClick('England') }} />
+                    <input type='button' value='England' onClick={() => { this.handleExampleButtonClick('England') }} />
                     &nbsp;&nbsp;&nbsp;
-                    <input type='button' value='UK' onClick={() => { this.handleExampmeButtonClick('UK') }} />
+                    <input type='button' value='UK' onClick={() => { this.handleExampleButtonClick('UK') }} />
                   </p>
                   <p>
-                    <input type='button' value='Chicago' onClick={() => { this.handleExampmeButtonClick('Chicago') }} />
+                    <input type='button' value='Chicago' onClick={() => { this.handleExampleButtonClick('Chicago') }} />
                     &nbsp;&nbsp;&nbsp;
-                    <input type='button' value='USA' onClick={() => { this.handleExampmeButtonClick('USA') }} />
+                    <input type='button' value='USA' onClick={() => { this.handleExampleButtonClick('USA') }} />
                   </p>
                   <p>
-                    <input type='button' value='Berlin' onClick={() => { this.handleExampmeButtonClick('Berlin') }} />
+                    <input type='button' value='Berlin' onClick={() => { this.handleExampleButtonClick('Berlin') }} />
                   </p>
                   <p>
-                    <input type='button' value='Germany' onClick={() => { this.handleExampmeButtonClick('Germany') }} />
+                    <input type='button' value='Germany' onClick={() => { this.handleExampleButtonClick('Germany') }} />
                   </p>
                   <p>
-                    <input type='button' value='Audi' onClick={() => { this.handleExampmeButtonClick('Audi') }} />
+                    <input type='button' value='Audi' onClick={() => { this.handleExampleButtonClick('Audi') }} />
                     &nbsp;&nbsp;&nbsp;
-                    <input type='button' value='Porsche' onClick={() => { this.handleExampmeButtonClick('Porsche') }} />
+                    <input type='button' value='Porsche' onClick={() => { this.handleExampleButtonClick('Porsche') }} />
                   </p>
                   <p>
-                    <input type='button' value='BMW' onClick={() => { this.handleExampmeButtonClick('BMW') }} />
+                    <input type='button' value='BMW' onClick={() => { this.handleExampleButtonClick('BMW') }} />
                   </p>
                   <p>
-                    <input type='button' value='All Pictures' onClick={() => { this.handleExampmeButtonClick('') }} />
+                    <input type='button' value='All Pictures' onClick={() => { this.handleExampleButtonClick('') }} />
                   </p>
                   <hr />
                   <p>
-                    <select ref='timeSelect' onChange={this.handleSelectChange}>
+                    <select ref='timeSelect' onChange={this.handleCountdownSelectChange}>
                       {[1, 3, 4, 10, 30, 60].map((num) =>  
-                          <option value={num * 1000} selected={this.state.counter == (num * 1000)}>{num} sec</option>
+                          <option value={num * 1000} selected={this.state.countdown == (num * 1000)}>{num} sec</option>
                       )}
                     </select>
                   </p>
@@ -312,9 +300,9 @@ class App extends Component {
                         }
                       </p>
                       <p>{`query: ${JSON.stringify(this.state.query)}`}</p>
-                      <p>{`[${JSON.stringify(this.state.dataPicNum + 1)}/${this.state.limit}]`} </p>
+                      <p>{`[${JSON.stringify(this.state.chunkPicNum + 1)}/${CHUNK_SIZE}]`} </p>
                       <p>{`page: ${JSON.stringify(this.state.page)}`}</p>
-                      <p>countdownMs: <br />{JSON.stringify(this.state.countdownMs)}</p>
+                      <p>currentCountdown: <br />{JSON.stringify(this.state.currentCountdown)}</p>
                       <p>{`paused: ${JSON.stringify(this.state.paused)}`}</p>
                     </div>
                 </td>
