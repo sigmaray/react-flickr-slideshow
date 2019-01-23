@@ -34,8 +34,7 @@ class App extends Component {
   }
 
   startCountDown = (finishCallback, ms) => {
-    this.setState({currentCountdown: ms});
-    this.setState({currentCountdown: this.state.inputCountdown});
+    this.setState({currentCountdown: ms, currentCountdown: this.state.inputCountdown});
     this.timer = setTimeout(() => { this.countDown(finishCallback); }, 1000);
   }
 
@@ -45,15 +44,13 @@ class App extends Component {
       this.setState({currentCountdown: newC});
     }
     if (
-      (
-        this.state.currentCountdown == 0
-        ||this.state.resettingToNewQuery
-        || this.state.resettingToNext
-        || this.state.resettingToNext10
-        || this.state.resettingToNext100
-        || this.state.resettingToBack
-        || this.state.resettingToBack10
-      )
+      this.state.currentCountdown == 0
+      ||this.state.resettingToNewQuery
+      || this.state.resettingToNext
+      || this.state.resettingToNext10
+      || this.state.resettingToNext100
+      || this.state.resettingToBack
+      || this.state.resettingToBack10
     ) {
        clearTimeout(this.timer);
        this.timer = null;
