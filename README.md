@@ -9,6 +9,7 @@ Functionality:
 * Handling network errors. If internet connection is lost, it will not stop trying to fetch images
 
 TODO:
+* Move constants (API_KEY, CHUNK_SIZE) into separate file
 * Use promises and axios in gitFlickrPicsList
 * Use redux
 * Use flexbox instead of tables.
