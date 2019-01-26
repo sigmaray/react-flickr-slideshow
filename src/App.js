@@ -3,7 +3,7 @@ import gitFlickrPicsList from './flickr';
 import generateNoty from './generateNoty';
 
 const API_KEY = '4cc2a6e2419deebfe86eca026cfda157';
-const CHUNK_SIZE = 10;
+const CHUNK_SIZE = 100;
 
 class App extends Component {
   constructor() {
@@ -22,11 +22,10 @@ class App extends Component {
       paused: false,
       loadingServerData: false,
       resettingToNewQuery: false,
-      resettingToBack: false,
-      resettingToBack10: false,
+      resettingToPrevious: false,
+      resettingToPreviousPage: false,
       resettingToNext: false,
-      resettingToNext10: false,
-      resettingToNext100: false
+      resettingToNextPage: false
     };
     this.state.inputQuery = this.state.currentQuery;
 
@@ -47,10 +46,9 @@ class App extends Component {
       this.state.currentCountdown == 0
       ||this.state.resettingToNewQuery
       || this.state.resettingToNext
-      || this.state.resettingToNext10
-      || this.state.resettingToNext100
-      || this.state.resettingToBack
-      || this.state.resettingToBack10
+      || this.state.resettingToNextPage
+      || this.state.resettingToPrevious
+      || this.state.resettingToPreviousPage
     ) {
        clearTimeout(this.timer);
        this.timer = null;
@@ -88,23 +86,25 @@ class App extends Component {
           document.title = `${this.state.currentQuery ? this.state.currentQuery + ' - ' : '' }Flickr Slideshow`;
           this.setState({chunkArray: [], page: 1, chunkPicNum: 0, resettingToNewQuery: false});
           this.loadFlickrData();
-        } else if (this.state.resettingToNext10) {
-          this.setState({resettingToNext10: false});
-          this.setState({page: this.state.page + 10});
+        } else if (this.state.resettingToNextPage) {
+          this.setState({resettingToNextPage: false});
+          this.setState({page: this.state.page + 1});
           this.loadFlickrData();
-        } else if (this.state.resettingToNext100) {
-          this.setState({resettingToNext100: false});
-          this.setState({page: this.state.page + 100});
+        } else if (this.state.resettingToPreviousPage) {
+          this.setState({resettingToPreviousPage: false});
+          if (this.state.page >= 1 ) {
+            this.setState({page: this.state.page - 1});
+          }
           this.loadFlickrData();
-        } else if (this.state.resettingToBack) {
-          this.setState({resettingToBack: false});
+        } else if (this.state.resettingToPrevious) {
+          this.setState({resettingToPrevious: false});
 
           if (this.state.chunkPicNum - 1 >= 0 ) {
             this.setState({chunkPicNum: this.state.chunkPicNum - 1});
             this.slideshowTimeout();
           } else {
             if (this.state.page - 1 >= 1 ) {
-              this.setState({page: this.state.page - 1, chunkPicNum: 9});
+              this.setState({page: this.state.page - 1, chunkPicNum: (CHUNK_SIZE - 1)});
               this.loadFlickrData();
             }
           }
@@ -151,14 +151,12 @@ class App extends Component {
 
   handleBackButtonClick = () => {
     if (!(this.state.page == 1 && this.state.chunkPicNum == 0)) {
-      this.setState({resettingToBack: true});
+      this.setState({resettingToPrevious: true});
     }
   }
 
-  handleBack10ButtonClick = () => {
-    if (!(this.state.page == 1 && this.state.chunkPicNum == 0)) {
-      this.setState({resettingToBack10: true});
-    }
+  handlePreviousPageButtonClick = () => {
+    this.setState({resettingToPreviousPage: true});
   }
 
   handlePauseButtonClick = () => {
@@ -173,12 +171,8 @@ class App extends Component {
     this.setState({resettingToNext: true});
   }
 
-  handleNext10ButtonClick = () => {
-    this.setState({resettingToNext10: true});
-  }
-
-  handleNext100ButtonClick = () => {
-    this.setState({resettingToNext100: true});
+  handleNextPageButtonClick = () => {
+    this.setState({resettingToNextPage: true});
   }
 
   render() {
@@ -268,18 +262,17 @@ class App extends Component {
                       </select>
                     </p>
                     <p>
-                      <input type='button' value='< Back' onClick={this.handleBackButtonClick} />
+                      <input type='button' value={`<< Previous ${CHUNK_SIZE}`} onClick={this.handleNextButtonClick} />
+                      &nbsp;&nbsp;&nbsp;
+                      <input type='button' value='< Previous' onClick={this.handleBackButtonClick} />
                     </p>
                     {/*<p>
-                      <input type='button' value='<< Back 10' onClick={this.handleBack10ButtonClick} />
+                      <input type='button' value='<< Previous 10' onClick={this.handlePreviousPageButtonClick} />
                     </p>*/}
                     <p>
                       <input type='button' value='Next >' onClick={this.handleNextButtonClick} />
                       &nbsp;&nbsp;&nbsp;
-                      <input type='button' value='Next 10 >>' onClick={this.handleNext10ButtonClick} />
-                    </p>
-                    <p>
-                      <input type='button' value='Next 100 >>>' onClick={this.handleNext100ButtonClick} />
+                      <input type='button' value={`Next ${CHUNK_SIZE} >>`} onClick={this.handleNextPageButtonClick} />
                     </p>
                     <p>
                       <input type='button' value='Pause' onClick={this.handlePauseButtonClick} />
@@ -291,7 +284,7 @@ class App extends Component {
                       <div>
                         <p>
                           {this.state.loadingServerData &&
-                            <div>..loading xml from flickr..</div>
+                            <div>..loading json..</div>
                           }
                         </p>
                         <p>{`currentQuery: ${JSON.stringify(this.state.currentQuery)}`}</p>
