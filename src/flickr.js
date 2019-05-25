@@ -14,8 +14,9 @@ export default function gitFlickrPicsList(apiKey, successCallback, errorCallback
         $.each(data.photos.photo, function(i, item) {
           let flickrUrl, src;
           // const size = `c`;
-          const size = `h`;
-          src = `http://farm${item.farm}.static.flickr.com/${item.server}/${item.id}_${item.secret}_${size}.jpg`;
+          const size = `b`;
+          // src = `http://farm${item.farm}.static.flickr.com/${item.server}/${item.id}_${item.secret}_${size}.jpg`;
+          src = `https://live.staticflickr.com/${item.server}/${item.id}_${item.secret}_${size}.jpg`;
           flickrUrl = `https://www.flickr.com/photos/${item.owner}/${item.id}`;
           imgs.push({
             src: src,
