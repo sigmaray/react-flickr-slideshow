@@ -17,7 +17,7 @@ https://sigmaray.github.io/react-flickr-slideshow-demo/
 * Use Redux
 * Use flexbox instead of tables.
 
-Code was written in spare time (I don't have enough of it). My biggest goal was to write code that works. There is large room for improvement, but unfortunately I don't have time to refactor the code.
+Code was written in spare time (I don't have enough of it). My biggest goal was to write code that works. There is large room for improvement, but unfortunately I don't have time for refactoring.
 
 ## Screenshot
 ![image](https://github.com/sigmaray/react-flickr-slideshow/assets/1594701/9a0518b9-22e8-49f4-8c71-71425fa211d6)
